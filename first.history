@@ -1,0 +1,62 @@
+download.file('http://stat-computing.org/dataexpo/2009/2008.csv.bz2')
+?download.file
+download.file('http://stat-computing.org/dataexpo/2009/2008.csv.bz2', '2008.csv.bz2')
+?unzip
+unzip('2008.csv.bz2')
+library(sparklyr)
+library(sparklyr)
+library(dplyr)
+sc <- spark_connect(master = 'local')
+?copy_to
+help(package='sparklyr')
+readLines('2008.csv', 1)
+spark_read_csv(sc, 'air2008', '2008.csv')
+air2008 <- spark_read_csv(sc, 'air2008', '2008.csv')
+src_tbls(sc)
+?src_tbls
+names(air2008)
+str(air2008)
+explain(air2008)
+tbl_vars(air2008)
+air2008 %>% filter(Month %in% c(1,2,3))
+air2008
+air2008 %>% filter(Month %in% c(1,2,3))
+summary(air2008)
+air2008 %>% distinct(DepDelay)
+air2008 %>% distinct(UniqueCarrier)
+air2008 %>% distinct(UniqueCarrier) %>% arrange(UniqueCarrier)
+air2008
+depDelay <- air2008 %>% distinct(DepDelay)
+depDelay
+help(package='sparklyr')
+depDelay <- sdf_read_column(air2008, 'DepDelay')
+depDelay
+air2008
+??copy_to
+??copy_from
+??tbl
+depDelay <- air2008 %>% distinct(DepDelay) %>% tbl_df()
+depDelay$DepDelay
+is.numeric(depDelay$DepDelay)
+dd <- as.numeric(depDelay$DepDelay)
+depDelay$DepDelay[which(is.na(dd))]
+which(is.na(dd))
+depDelay[593:595, ]
+?spark_read_csv
+?readLines
+air2008 <- air2008 %>% mutate(DepDelay_n = as.numeric(DepDelay))
+air2008
+table(air2008$DepDelay_n)
+air2008 %>% summarize(minDelay = min(DepDelay_n, na.rm = T), maxDelay = max(DepDelay_n, na.rm = T), meanDelay = mean(DepDelay_n, na.rm = T), medianDelay = median(DepDelay_n, na.rm = T))
+air2008 %>% summarize(minDelay = min(DepDelay_n, na.rm = T), maxDelay = max(DepDelay_n, na.rm = T), meanDelay = mean(DepDelay_n, na.rm = T))
+air2008
+result <- air2008 %>% mutate(DayOfWeek_f = as.factor(DayOfWeek)) %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+help(package='sparklyr')
+result <- air2008 %>% recode_factor(DayOfWeek, `1`=) %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+result <- air2008 %>% recode_factor(DayOfWeek, `1`='Sunday', `2`='Monday', `3`='Tuesday', `4`='Wednesday', `5`='Thursday', `6`='Friday', `7`='Saturday') %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+result <- air2008 %>% mutate(DayOfWeek_f = c(`1`='Sunday', `2`='Monday', `3`='Tuesday', `4`='Wednesday', `5`='Thursday', `6`='Friday', `7`='Saturday')[DayOfWeek]) %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+result <- air2008 %>% mutate(DayOfWeek_f = c(`1`='Sunday', `2`='Monday', `3`='Tuesday', `4`='Wednesday', `5`='Thursday', `6`='Friday', `7`='Saturday')[`DayOfWeek`]) %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+result <- air2008 %>% mutate(DayOfWeek_f = ~c(`1`='Sunday', `2`='Monday', `3`='Tuesday', `4`='Wednesday', `5`='Thursday', `6`='Friday', `7`='Saturday')[`DayOfWeek`]) %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+result <- air2008 %>% mutate(DayOfWeek_f = switch(DayOfWeek, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')) %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+result <- air2008 %>% recode(DayOfWeek, `1`='Sunday', `2`='Monday', `3`='Tuesday', `4`='Wednesday', `5`='Thursday', `6`='Friday', `7`='Saturday') %>% ml_linear_regression(DepDelay_n, DayOfWeek_f)
+savehistory("~/airtraffic/first.history")
