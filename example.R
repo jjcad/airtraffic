@@ -1,6 +1,6 @@
 library(sparklyr)
 library(dplyr)
 
-sc <- spark_connect(master = 'local')
+sc <- spark_connect(master = 'spark://master:7077')
 
 air <- spark_read_csv(sc, 'air', '*.csv', null_value = NA)
