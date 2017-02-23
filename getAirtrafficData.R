@@ -1,4 +1,5 @@
 install.packages('sparklyr')
+install.packages('tidyverse')
 
 # Grab the data. Can take a few minutes.
 download.file('http://stat-computing.org/dataexpo/2009/2008.csv.bz2', '2008.csv.bz2')
